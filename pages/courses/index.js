@@ -1,7 +1,10 @@
+import LessonsPage from '../../src/pages/LessonsPage';
+
 import React from 'react';
-import styles from '../styles/dropdownMenu.module.css';
-import { makeStyles } from '@material-ui/core';
-import LandingPage from '../src/pages/LandingPage';
+import { ThemeProvider } from 'styled-components';
+import { landingTheme } from '../../utils/themes';
+import LandingPage from '../../src/pages/LandingPage';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((brightTheme) => ({
 	'@global': {
@@ -18,12 +21,11 @@ const useStyles = makeStyles((brightTheme) => ({
 		},
 	},
 }));
-
-export default function Home() {
+export default function Page() {
 	const classes = useStyles();
 	return (
-		<>
-			<LandingPage />
-		</>
+		<ThemeProvider theme={landingTheme}>
+			<LessonsPage />
+		</ThemeProvider>
 	);
 }

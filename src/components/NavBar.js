@@ -3,35 +3,21 @@ import {
 	Toolbar,
 	Typography,
 	IconButton,
-	ThemeProvider,
-	InputBase,
-	Grid,
-	Button,
+	ThemeProvider as MUIThemeProvider,
+	ClickAwayListener,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core';
-import { brightTheme } from '../../utils/themes';
-import SearchIcon from '@material-ui/icons/Search';
 import { HomeOutlined, AccountCircle } from '@material-ui/icons';
-
+import { ThemeProvider } from 'styled-components';
+import { landingTheme as theme } from '../../utils/landingTheme';
+import NavSearchbar from './searchbars/navSearchbar';
+import { courses } from '../../utils/dummyCourseData';
+import React, { useState, useRef } from 'react';
+import DropdownMenu from './dropdownMenu';
 const useStyles = makeStyles((theme) => ({
-	searchBar: {
-		'& :hover': {
-			backgroundColor: theme.palette.primary.light,
-		},
-		'& :focus': {
-			backgroundColor: theme.palette.primary.light,
-			width: '20rem',
-		},
-		color: theme.palette.themeBlack,
-		marginRight: theme.spacing(5),
-	},
 	appBarText: {
 		flex: 1,
 		color: 'primary',
-	},
-	searchIcon: {
-		marginRight: theme.spacing(1),
 	},
 
 	navbar: {
@@ -40,50 +26,80 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 	icons: {
-		fontSize: '40px',
+		fontSize: '2.65rem',
 	},
 
 	toolbarMargin: theme.mixins.toolbar,
 
 	title: {
 		color: theme.palette.themeBlack.dark,
-		fontSize: '30px',
+		fontSize: '2rem',
 		fontWeight: 'fontWeightBold',
 		margin: theme.spacing(0, 2, 0),
 	},
 
 	accountIcon: {
 		color: theme.palette.secondary,
-		marginLeft: 'auto',
 	},
 
 	moreinfo: {
-		minHeight: '64px',
+		minHeight: '100%',
 		textTransform: 'capitalize',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: '140px',
-		outerHeight: '100%',
-		marginLeft: '56px',
+		width: '9.3333rem',
+		margin: '0 1rem',
+		padding: '1rem',
+		backgroundColor: 'transparent',
+		transition: 'all 200ms ease-in-out',
+		border: '3px solid transparent',
 		'&:hover': {
 			backgroundColor: theme.palette.secondary.dark,
+			border: `3px solid ${theme.palette.secondary.dark}`,
+			borderRadius: '5px',
 		},
 	},
 
 	infoTabText: {
-		fontSize: '20px',
+		fontSize: '1.33333rem',
 		color: theme.palette.themeBlack.dark,
+	},
+	infoWrapper: {
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'row',
+		flexWrap: 'noWrap',
 	},
 }));
 
-export default function NavBar() {
+function NavItem(props) {
+	const { label } = props;
 	const classes = useStyles();
-	const onClickTab = () => {
+	const [open, setOpen] = useState(false);
+	const handleClose = () => {
+		setOpen(false);
+	};
+	const handleToggle = () => {
 		console.log('Clicked');
+		setOpen(!open);
 	};
 	return (
-		<>
+		<ClickAwayListener onClickAway={handleClose}>
+			<div>
+				<div className={classes.moreinfo} onClick={handleToggle}>
+					<Typography className={classes.infoTabText}>{label}</Typography>
+				</div>
+
+				{open && props.children}
+			</div>
+		</ClickAwayListener>
+	);
+}
+export default function NavBar() {
+	const classes = useStyles();
+	return (
+		<MUIThemeProvider theme={theme}>
 			<AppBar className={classes.navbar}>
 				<Toolbar>
 					<IconButton className={classes.icons} href="#" variant="outlined">
@@ -92,33 +108,27 @@ export default function NavBar() {
 					<Typography className={classes.title} variant="h6" fontFamily="KoHo">
 						Excel
 					</Typography>
-					<Grid container>
-						<Button
-							className={classes.moreinfo}
-							onClick={() => {
-								console.log('Clicked');
-							}}
-							disableRipple
-						>
-							<Typography className={classes.infoTabText}>Courses</Typography>
-						</Button>
-						<Button className={classes.moreinfo} disableRipple>
-							<Typography className={classes.infoTabText}>
-								Discussion
-							</Typography>
-						</Button>
-					</Grid>
-					<InputBase
-						placeholder="search..."
-						startAdornment={<SearchIcon className={classes.searchIcon} />}
-						className={classes.searchBar}
-					/>
+					<div className={classes.infoWrapper}>
+						<NavItem label="Courses">
+							<div>
+								<DropdownMenu courses={courses} />
+							</div>
+						</NavItem>
+						<NavItem label="Discussion">
+							<div>
+								<DropdownMenu courses={courses} />
+							</div>
+						</NavItem>
+					</div>
+					<ThemeProvider theme={theme}>
+						<NavSearchbar />
+					</ThemeProvider>
 					<IconButton marginLeft="auto" className={classes.accountIcon}>
 						<AccountCircle color="secondary" className={classes.icons} />
 					</IconButton>
 				</Toolbar>
 			</AppBar>
 			<div className={classes.toolbarMargin} />
-		</>
+		</MUIThemeProvider>
 	);
 }

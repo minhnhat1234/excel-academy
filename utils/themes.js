@@ -1,15 +1,40 @@
-import { createMuiTheme } from '@material-ui/core'
+import { createMuiTheme } from '@material-ui/core';
 
 const brightTheme = createMuiTheme({
-    palette: {
-      primary: {
-        main: '#ffcc5c'
-      },
-  
-      secondary: {
-        main: '#ff914d'
-      }
-    },
-  })
+	palette: {
+		primary: {
+			main: '#ffcc5c',
+		},
 
-export { brightTheme }
+		secondary: {
+			main: '#ff914d',
+		},
+	},
+});
+
+const landingTheme = createMuiTheme({
+	typography: {
+		fontFamily: ['Koho', 'sans-serif'].join(','),
+	},
+
+	palette: {
+		primary: {
+			main: '#F7EBE8',
+		},
+
+		secondary: {
+			main: '#FFA987',
+		},
+
+		themeRed: {
+			main: '#E54B4B',
+		},
+
+		themeBlack: {
+			main: '#444140',
+			dark: '#1E1E24',
+		},
+	},
+});
+
+export { brightTheme, landingTheme };
